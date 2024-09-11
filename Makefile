@@ -1,16 +1,12 @@
 # Compiler settings
 CXX = g++
-CXXFLAGS = -g -O2 -Wall -Wextra -std=c++11
+CXXFLAGS = -Wall -std=c++11
 LDFLAGS = -pthread
 
 # Files
 SRC = main.cpp Graph.cpp
-OBJS = $(SRC:.cpp=.o)
-EXEC = graph_exercise
-
-# Test coverage and profiling
-CXXFLAGS += --coverage
-LDFLAGS += -lgcov
+OBJS = main.o Graph.o
+EXEC = graph
 
 all: $(EXEC)
 
@@ -19,39 +15,18 @@ $(EXEC): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS)
 
 # Object file generation
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
+
+Graph.o: Graph.cpp
+	$(CXX) $(CXXFLAGS) -c Graph.cpp -o Graph.o
 
 # Clean up
 clean:
-	rm -f $(EXEC) $(OBJS) *.gcda *.gcno *.gcov
-
-# Run code coverage
-coverage: $(EXEC)
-	./$(EXEC)
-	gcov $(SRC)
-
-# Run gprof for profiling
-profile: $(EXEC)
-	./$(EXEC)
-	gprof $(EXEC) gmon.out > analysis.txt
+	rm -f $(EXEC) $(OBJS)
 
 # Run Valgrind
 valgrind: $(EXEC)
-	valgrind --leak-check=full --track-origins=yes ./$(EXEC)
+	valgrind --leak-check=full ./$(EXEC)
 
-# Run Valgrind call graph
-callgraph: $(EXEC)
-	valgrind --tool=callgrind ./$(EXEC)
-	callgrind_annotate callgrind.out.* > callgraph.txt
-
-# Targets for task 5 and task 7 code
-hello: hello.c
-	gcc -g -o hello hello.c
-	valgrind --leak-check=full ./hello
-
-race: race.c
-	gcc -g -o race race.c -pthread
-	valgrind --tool=helgrind ./race
-
-.PHONY: all clean coverage profile valgrind callgraph hello race
+.PHONY: all clean valgrind
