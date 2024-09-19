@@ -1,32 +1,33 @@
 # Compiler settings
 CXX = g++
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -std=c++11 -pthread --coverage
 LDFLAGS = -pthread
 
-# Files
-SRC = main.cpp Graph.cpp
-OBJS = main.o Graph.o
-EXEC = graph
-
-all: $(EXEC)
+all: graph
 
 # Link the executable
-$(EXEC): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS)
+graph: main.o Graph.o
+	$(CXX) $(CXXFLAGS) -o graph main.o Graph.o $(LDFLAGS)
 
 # Object file generation
 main.o: main.cpp
-	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
+	$(CXX) $(CXXFLAGS) -c main.cpp
 
 Graph.o: Graph.cpp
-	$(CXX) $(CXXFLAGS) -c Graph.cpp -o Graph.o
+	$(CXX) $(CXXFLAGS) -c Graph.cpp
 
 # Clean up
 clean:
-	rm -f $(EXEC) $(OBJS)
+	rm -f graph main.o Graph.o *.gcda *.gcno *.gcov
 
 # Run Valgrind
-valgrind: $(EXEC)
-	valgrind --leak-check=full ./$(EXEC)
+valgrind: graph
+	valgrind --leak-check=full ./graph
 
-.PHONY: all clean valgrind
+# Generate coverage report for project files only
+coverage: graph
+	./graph
+	gcov main.cpp
+	gcov Graph.cpp
+
+.PHONY: all clean valgrind coverage
