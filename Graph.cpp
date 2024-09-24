@@ -12,13 +12,13 @@ void LinkedList::push(int data) {
     head = newNode;  // Update the head to the new node
 }
 
-void LinkedList::clear() {
-    while (head) {
-        Node* temp = head;  // Store the current head in a temporary pointer
-        head = head->next;  // Move the head to the next node
-        delete temp;  // Delete the old head
-    }
-}
+// void LinkedList::clear() {
+//     while (head) {
+//         Node* temp = head;  // Store the current head in a temporary pointer
+//         head = head->next;  // Move the head to the next node
+//         delete temp;  // Delete the old head
+//     }
+// }
 
 void LinkedList::print() const {
     Node* current = head;  // Start from the head of the list
@@ -53,6 +53,20 @@ bool Graph::isEulerian() {
         return false;  // Not Eulerian if graph is not connected
     }
 
+    // Check if there is at least one edge in the graph
+    bool hasEdges = false;
+    for (int i = 0; i < V; ++i) {
+        if (adj[i].head != nullptr) {
+            hasEdges = true;
+            break;
+        }
+    }
+
+    // If there are no edges, the graph can't have an Eulerian circuit
+    if (!hasEdges) {
+        return false;
+    }
+
     // Check if all vertices with non-zero degree have an even degree
     for (int i = 0; i < V; i++) {
         int degree = 0;
@@ -66,8 +80,9 @@ bool Graph::isEulerian() {
         }
     }
 
-    return true;  // Eulerian if all vertices have even degree
+    return true;  // Eulerian if all vertices have even degree and there are edges
 }
+
 
 void Graph::DFS(int v, std::vector<bool>& visited) {
     visited[v] = true;  // Mark the current node as visited
