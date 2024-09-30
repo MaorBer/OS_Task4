@@ -1,6 +1,6 @@
 # Compiler settings
 CXX = g++
-CXXFLAGS = -Wall -std=c++11 -pthread --coverage
+CXXFLAGS = -Wall -std=c++11 -pthread -g --coverage
 LDFLAGS = -pthread
 
 all: graph
