@@ -5,14 +5,14 @@
 #include <memory>
 
 class Singleton {
-public:  // Change to public
+public:  
     static pthread_mutex_t mutex;  // Mutex for thread safety
 
 protected:
     Singleton() {}  // Protected constructor
 
 public:
-    // Deleted copy constructor and assignment operator
+
     Singleton(const Singleton&) = delete;
     Singleton& operator=(const Singleton&) = delete;
 

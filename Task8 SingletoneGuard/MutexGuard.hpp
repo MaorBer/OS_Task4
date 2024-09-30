@@ -16,7 +16,7 @@ public:
         pthread_mutex_unlock(mtx);
     }
 
-    // Deleted copy constructor and assignment operator
+
     MutexGuard(const MutexGuard&) = delete;
     MutexGuard& operator=(const MutexGuard&) = delete;
 };
